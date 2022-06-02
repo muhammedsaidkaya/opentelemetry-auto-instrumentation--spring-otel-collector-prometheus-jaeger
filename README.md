@@ -8,8 +8,6 @@ kubectl apply -f .
 kubectl port-forward svc/prometheus-service 9090:9090
 kubectl port-forward svc/jaeger-service 16686:16686
 kubectl port-forward svc/otel-collector 4318:4318
-kubectl port-forward svc/otel-collector 8888:8888
-kubectl port-forward svc/otel-collector 8889:8889
 
 docker-compose up -d
 
@@ -21,10 +19,8 @@ curl -X POST --location "http://localhost:9091/api/v1.0/print" \
 ```
 
 * Prometheus-k8s: http://localhost:9090
-* Prometheus-docker-compose: http://localhost:9099
 * Jaeger: http://localhost:16686
 * Otel Collector HTTP Receiver: http://localhost:4318
-* Otel Collector Metric Exporter: http://localhost:8889/metrics
 
 # Print-Service VM Options 
 ```
