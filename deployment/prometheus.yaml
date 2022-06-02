@@ -1,0 +1,104 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: prometheus
+  name: prometheus-service
+spec:
+  ports:
+  - port: 9090
+    protocol: TCP
+    targetPort: 9090
+    nodePort: 30009
+  selector:
+    app: prometheus
+  type: NodePort
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-deployment
+  labels:
+    app: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.1.0
+          ports:
+            - containerPort: 9090
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus/"
+            - '--web.listen-address=:9090'
+
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/
+            - name: prometheus-storage-volume
+              mountPath: /prometheus/
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            defaultMode: 420
+            name: prometheus-server-conf
+
+        - name: prometheus-storage-volume
+          emptyDir: { }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-server-conf
+data:
+  prometheus.yml: |
+    # my global config
+    global:
+      scrape_interval:     15s # By default, scrape targets every 15 seconds.
+      evaluation_interval: 15s # By default, scrape targets every 15 seconds.
+      # scrape_timeout is set to the global default (10s).
+
+
+    # A scrape configuration containing exactly one endpoint to scrape:
+    # Here it's Prometheus itself.
+    scrape_configs:
+      # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+
+      - job_name: 'prometheus'
+
+        # Override the global default and scrape targets from this job every 5 seconds.
+        scrape_interval: 5s
+
+        static_configs:
+          - targets:
+            - "localhost:9090"
+        relabel_configs:
+          - source_labels: [ __address__ ]
+            regex: "([^:]+):.+"
+            target_label: "instance"
+            replacement: "$1"
+      - job_name: 'otel-collector'
+
+        # Override the global default and scrape targets from this job every 5 seconds.
+        scrape_interval: 5s
+
+        static_configs:
+          - targets:
+            - "otel-collector:8889"
+        relabel_configs:
+          - source_labels: [ __address__ ]
+            regex: "([^:]+):.+"
+            target_label: "instance"
+            replacement: "$1"

@@ -1,0 +1,5 @@
+### Send POST request with json body
+POST http://localhost:9091/api/v1.0/print
+Content-Type: text/plain
+
+muhammed

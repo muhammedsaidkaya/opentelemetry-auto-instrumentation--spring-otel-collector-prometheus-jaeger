@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: jaeger
+  name: jaeger-service
+spec:
+  ports:
+  - name: port-1
+    port: 14250
+    protocol: TCP
+    targetPort: 14250
+  - name: port-2
+    port: 16686
+    protocol: TCP
+    targetPort: 16686
+    nodePort: 30008
+  selector:
+    app: jaeger
+  type: NodePort
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger-deployment
+  labels:
+    app: jaeger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger
+  template:
+    metadata:
+      labels:
+        app: jaeger
+    spec:
+      containers:
+        - name: jaeger
+          image: jaegertracing/all-in-one:1.9
+          ports:
+            - containerPort: 14250
+              name: backend
+            - containerPort: 16686
+              name: ui

@@ -1,0 +1,143 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  labels:
+    app: opentelemetry
+    component: otel-collector
+spec:
+  ports:
+    - name: otlp-grpc # Default endpoint for OpenTelemetry gRPC receiver.
+      port: 4317
+      protocol: TCP
+      targetPort: 4317
+    - name: otlp-http # Default endpoint for OpenTelemetry HTTP receiver.
+      port: 4318
+      protocol: TCP
+      targetPort: 4318
+      nodePort: 30010
+    - name: metrics # Default endpoint for querying metrics.
+      port: 8888
+    - name: exporter # Default endpoint for querying metrics.
+      port: 8889
+      nodePort: 30011
+  selector:
+    component: otel-collector
+  type:
+    NodePort
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: otel-collector
+  labels:
+    app: opentelemetry
+    component: otel-collector
+spec:
+  selector:
+    matchLabels:
+      app: opentelemetry
+      component: otel-collector
+  template:
+    metadata:
+      labels:
+        app: opentelemetry
+        component: otel-collector
+    spec:
+      containers:
+        - command:
+            - "/otelcol"
+            - "--config=/conf/otel-collector-config.yaml"
+          image: otel/opentelemetry-collector:0.52.0
+          name: otel-collector
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+            requests:
+              cpu: 200m
+              memory: 400Mi
+          ports:
+            - containerPort: 55679 # Default endpoint for ZPages.
+            - containerPort: 4317 # Default endpoint for OpenTelemetry receiver.
+            - containerPort: 14250 # Default endpoint for Jaeger gRPC receiver.
+            - containerPort: 14268 # Default endpoint for Jaeger HTTP receiver.
+            - containerPort: 9411 # Default endpoint for Zipkin receiver.
+            - containerPort: 8888  # Default endpoint for querying metrics.
+            - containerPort: 8889
+          volumeMounts:
+            - name: otel-collector-config-vol
+              mountPath: /conf
+      volumes:
+        - configMap:
+            name: otel-collector-conf
+            items:
+              - key: otel-collector-config
+                path: otel-collector-config.yaml
+          name: otel-collector-config-vol
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-conf
+  labels:
+    app: opentelemetry
+    component: otel-collector-conf
+data:
+  otel-collector-config: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: "localhost:4317"
+          http:
+            endpoint: "localhost:4318"
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: "otel-collector"
+              scrape_interval: 5s
+              static_configs:
+                - targets:
+                  - "localhost:8888"
+    processors:
+      batch:
+      memory_limiter:
+        # 80% of maximum memory up to 2G
+        limit_mib: 1500
+        # 25% of limit up to 2G
+        spike_limit_mib: 512
+        check_interval: 5s
+    exporters:
+      jaeger:
+        endpoint: "jaeger-service:14250"
+        tls:
+          insecure: true
+      prometheus:
+        endpoint: "localhost:8889"
+    extensions:
+      health_check:
+      pprof:
+      zpages:
+      memory_ballast:
+        size_mib: 512
+    service:
+      extensions: [health_check, pprof, zpages]
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch, memory_limiter]
+          exporters: [jaeger]
+        metrics:
+          receivers: [otlp, prometheus]
+          processors: [batch, memory_limiter]
+          exporters: [prometheus]
+      telemetry:
+        logs:
+          level: debug
+          initial_fields:
+            service: my-instance
+        metrics:
+          level: detailed
+          address: 0.0.0.0:8888
