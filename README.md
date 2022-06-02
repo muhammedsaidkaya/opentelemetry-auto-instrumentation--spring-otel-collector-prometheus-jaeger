@@ -8,21 +8,9 @@ kubectl apply -f .
 kubectl port-forward svc/prometheus-service 9090:9090
 kubectl port-forward svc/jaeger-service 16686:16686
 kubectl port-forward svc/otel-collector 4318:4318
-
-docker-compose up -d
-
-# Run PrintServiceApplication
-# Send POST request
-curl -X POST --location "http://localhost:9091/api/v1.0/print" \
-    -H "Content-Type: text/plain" \
-    -d "muhammed"
 ```
 
-* Prometheus-k8s: http://localhost:9090
-* Jaeger: http://localhost:16686
-* Otel Collector HTTP Receiver: http://localhost:4318
-
-# Print-Service VM Options 
+# Print-Service Run - VM Options 
 ```
 -javaagent:opentelemetry-javaagent.jar
 -Dotel.exporter.otlp.protocol=http/protobuf
@@ -33,6 +21,18 @@ curl -X POST --location "http://localhost:9091/api/v1.0/print" \
 -Dotel.logs.exporter=none
 -Dotel.exporter.otlp.logs.endpoint=http://localhost:4318/v1/logs
 -Dotel.service.name=print-service
+```
+
+* Prometheus-k8s: http://localhost:9090
+* Jaeger: http://localhost:16686
+
+# Test
+```
+# Run PrintServiceApplication
+# Send POST request
+curl -X POST --location "http://localhost:9091/api/v1.0/print" \
+    -H "Content-Type: text/plain" \
+    -d "muhammed"
 ```
 
 # Resources
