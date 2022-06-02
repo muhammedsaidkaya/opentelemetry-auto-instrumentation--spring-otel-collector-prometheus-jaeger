@@ -24,7 +24,7 @@ curl -X POST --location "http://localhost:9091/api/v1.0/print" \
 * Prometheus-docker-compose: http://localhost:9099
 * Jaeger: http://localhost:16686
 * Otel Collector HTTP Receiver: http://localhost:4318
-* Otel Collector Metric Exporter: http://localhost:8889
+* Otel Collector Metric Exporter: http://localhost:8889/metrics
 
 # Print-Service VM Options 
 ```
