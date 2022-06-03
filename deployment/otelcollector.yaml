@@ -19,7 +19,7 @@ spec:
       nodePort: 30010
     - name: metrics # Default endpoint for querying metrics.
       port: 8888
-    - name: exporter # Default endpoint for querying metrics.
+    - name: exporter # Metric Exporter
       port: 8889
       nodePort: 30011
   selector:
@@ -60,7 +60,8 @@ spec:
               memory: 400Mi
           ports:
             - containerPort: 55679 # Default endpoint for ZPages.
-            - containerPort: 4317 # Default endpoint for OpenTelemetry receiver.
+            - containerPort: 4317 # Default grpc endpoint for OpenTelemetry receiver.
+            - containerPort: 4318 # Default http endpoint for OpenTelemetry receiver.
             - containerPort: 14250 # Default endpoint for Jaeger gRPC receiver.
             - containerPort: 14268 # Default endpoint for Jaeger HTTP receiver.
             - containerPort: 9411 # Default endpoint for Zipkin receiver.
@@ -90,9 +91,8 @@ data:
       otlp:
         protocols:
           grpc:
-            endpoint: "localhost:4317"
           http:
-            endpoint: "localhost:4318"
+            endpoint: "0.0.0.0:4318"
       prometheus:
         config:
           scrape_configs:
@@ -116,6 +116,10 @@ data:
           insecure: true
       prometheus:
         endpoint: "0.0.0.0:8889"
+      otlp/elastic:
+        endpoint: "elasticsearch:9200"
+        tls:
+          insecure: true
     extensions:
       health_check:
       pprof:
@@ -125,6 +129,11 @@ data:
     service:
       extensions: [health_check, pprof, zpages]
       pipelines:
+        logs:
+          receivers: [otlp]
+          processors:
+          - batch
+          exporters: [otlp/elastic]
         traces:
           receivers: [otlp]
           processors: [batch, memory_limiter]

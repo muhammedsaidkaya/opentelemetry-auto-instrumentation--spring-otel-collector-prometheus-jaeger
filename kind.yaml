@@ -1,0 +1,30 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 30008 # Jaeger
+        hostPort: 30008
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+      - containerPort: 30009 # Prometheus
+        hostPort: 30009
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+      - containerPort: 30010 # OpenTelemetry HTTP receiver
+        hostPort: 30010
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+      - containerPort: 30011 # OpenTelemetry Prometheus Metric Exporter
+        hostPort: 30011
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+      - containerPort: 30012 # Kibana
+        hostPort: 30012
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+      - containerPort: 30013 # Elasticsearch
+        hostPort: 30013
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+  - role: worker
