@@ -27,4 +27,8 @@ nodes:
         hostPort: 30013
         listenAddress: "0.0.0.0"
         protocol: TCP
+      - containerPort: 30900 # Kafdrop
+        hostPort: 30900
+        listenAddress: "0.0.0.0"
+        protocol: TCP
   - role: worker

@@ -116,20 +116,28 @@ data:
           insecure: true
       prometheus:
         endpoint: "0.0.0.0:8889"
-      kafka:
-        topic: spans
+      kafka/logs:
+        topic: logs
+        protocol_version: 3.1.0
         brokers:
-        - kafka-svc:9092
-        auth:
-          tls:
-            insecure: true
-      logging:
-        loglevel: debug
+        - "kafka-svc:9092"
+      kafka/metrics:
+        topic: metrics
+        protocol_version: 3.1.0
+        brokers:
+        - "kafka-svc:9092"
+      kafka/traces:
+        topic: traces
+        protocol_version: 3.1.0
+        brokers:
+        - "kafka-svc:9092"
       elasticsearch:
         endpoints:
         - "http://elasticsearch:9200"
         tls:
           insecure: true
+      logging:
+        loglevel: debug
     extensions:
       health_check:
       pprof:
@@ -139,18 +147,18 @@ data:
     service:
       extensions: [health_check, pprof, zpages]
       pipelines:
-        traces:
+        logs:
           receivers: [otlp]
           processors: [batch, memory_limiter]
-          exporters: [jaeger]
+          exporters: [logging, kafka/logs, elasticsearch]
         metrics:
           receivers: [otlp, prometheus]
           processors: [batch, memory_limiter]
-          exporters: [prometheus]
-        logs:
+          exporters: [logging, kafka/metrics, prometheus]
+        traces:
           receivers: [otlp]
-          processors: []
-          exporters: [logging, elasticsearch]
+          processors: [batch, memory_limiter]
+          exporters: [logging, kafka/traces, jaeger]
       telemetry:
         logs:
           level: debug

@@ -2,38 +2,25 @@
 # OTEL-Collector - Prometheus - Jaeger Example
 
 # USAGE
+
+## Kind 
 ```
 kind create cluster --config=kind.yaml
-cd deployment
-kubectl apply -f .
 ```
 
-* Jaeger: http://localhost:30008
-* Prometheus: http://localhost:30009
-* Otel-Collector HTTP Receiver: http://localhost:30010
-* Otel-Collector Prometheus Exporter: http://localhost:30011/metrics
-* Kibana: http://localhost:30012
-* Elasticsearch: http://localhost:30013
-
-
-## Kafka Topics- Partitions
+## Elasticsearch & Kibana & Jaeger & Otel Collector & Prometheus
 ```
-kubectl run kafka-client --rm -ti --image bitnami/kafka:3.1.0
 
-kubectl exec -it kafka-client bash 
-
-kafka-topics.sh --create --topic spans --bootstrap-server kafka-svc:9092
-kafka-topics.sh --describe \
-  --topic spans \
-  --bootstrap-server kafka-svc:9092
-kafka-console-producer.sh \
-  --topic spans \
-  --bootstrap-server kafka-svc:9092
-kafka-console-consumer.sh \
-  --topic spans \
-  --from-beginning \
-  --bootstrap-server kafka-svc:9092
 ```
+
+* [Jaeger](https://github.com/muhammedsaidkaya/blob/master/jaeger/jaeger.yaml): http://localhost:30008
+* [Prometheus]((https://github.com/muhammedsaidkaya/blob/master/prometheus/prometheus.yaml)): http://localhost:30009
+* [Otel-Collector](https://github.com/muhammedsaidkaya/blob/master/otel/otelcollector.yaml) 
+  * HTTP Receiver: http://localhost:30010
+  * Prometheus Exporter: http://localhost:30011/metrics
+* [Kibana](https://github.com/muhammedsaidkaya/blob/master/elastic-kibana/kibana.yaml): http://localhost:30012
+* [Elasticsearch](https://github.com/muhammedsaidkaya/blob/master/elastic-kibana/elastic.yaml): http://localhost:30013
+
 # Print-Service Run - VM Options 
 ```
 -javaagent:opentelemetry-javaagent.jar
@@ -42,7 +29,7 @@ kafka-console-consumer.sh \
 -Dotel.exporter.otlp.traces.endpoint=http://localhost:30010/v1/traces
 -Dotel.metrics.exporter=otlp
 -Dotel.exporter.otlp.metrics.endpoint=http://localhost:30010/v1/metrics
--Dotel.logs.exporter=none
+-Dotel.logs.exporter=otlp
 -Dotel.exporter.otlp.logs.endpoint=http://localhost:30010/v1/logs
 -Dotel.service.name=print-service
 ```
@@ -62,6 +49,11 @@ curl -X POST --location "http://localhost:9091/api/v1.0/print" \
 * [Otel Collector Contrib Github](https://github.com/open-telemetry/opentelemetry-collector-contrib)
 * [Otel Collector Contrib Dockerhub](https://hub.docker.com/r/otel/opentelemetry-collector-contrib/tags)
 * [Otel Collector - Operator Helm Charts](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator)
+
 * [Elastic-Kibana Installation](https://medium.com/devopsturkiye/kubernetes-elk-kurulumu-80058c812cf6)
+* [Kafka Installation](https://developer.lightbend.com/docs/cloudflow/current/install/how-to-install-and-use-strimzi.html)
+* [Kafka Client - Kafdrop](https://ricardo-aires.github.io/helm-charts/charts/kafdrop/)
+* [Kafka Client - Kafdrop Github](https://github.com/obsidiandynamics/kafdrop)
+
 * [Otel Collector Kafka Exporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/0faff4502e26af10b570a8bd80d8d98a7d0283f5/exporter/kafkaexporter)
 * [Otel Collector Elastic Exporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/0faff4502e26af10b570a8bd80d8d98a7d0283f5/exporter/elasticsearchexporter)
