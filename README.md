@@ -14,7 +14,7 @@ kind create cluster --config=kind.yaml
 ```
 
 * [Jaeger](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation--spring-otel-collector-prometheus-jaeger/blob/master/jaeger/jaeger.yaml): http://localhost:30008
-* [Prometheus](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation--spring-otel-collector-prometheus-jaeger/blob/master/prometheus/prometheus.yaml)): http://localhost:30009
+* [Prometheus](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation--spring-otel-collector-prometheus-jaeger/blob/master/prometheus/prometheus.yaml): http://localhost:30009
 * [Otel-Collector](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation--spring-otel-collector-prometheus-jaeger/blob/master/otel/otelcollector.yaml) 
   * HTTP Receiver: http://localhost:30010
   * Prometheus Exporter: http://localhost:30011/metrics
