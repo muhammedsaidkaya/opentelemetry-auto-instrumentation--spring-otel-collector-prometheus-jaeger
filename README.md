@@ -14,24 +14,25 @@ kubectl apply -f .
 * Otel-Collector Prometheus Exporter: http://localhost:30011/metrics
 * Kibana: http://localhost:30012
 * Elasticsearch: http://localhost:30013
-* Otel Collector - Kafka Exporter : https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/kafkaexporter
+
 
 ## Kafka Topics- Partitions
 ```
-kubectl run kafka-client --rm -ti --image bitnami/kafka:3.1.0 -- 	bash
+kubectl run kafka-client --rm -ti --image bitnami/kafka:3.1.0
+
 kubectl exec -it kafka-client bash 
-NOTE: 10.244.1.33:9092 (Pod IP)
-kafka-topics.sh --create --topic span --bootstrap-server 10.244.1.33:9092
+
+kafka-topics.sh --create --topic spans --bootstrap-server kafka-svc:9092
 kafka-topics.sh --describe \
-  --topic span \
-  --bootstrap-server 10.244.1.33:9092
+  --topic spans \
+  --bootstrap-server kafka-svc:9092
 kafka-console-producer.sh \
-  --topic span \
-  --bootstrap-server 10.244.1.33:9092
+  --topic spans \
+  --bootstrap-server kafka-svc:9092
 kafka-console-consumer.sh \
-  --topic span \
+  --topic spans \
   --from-beginning \
-  --bootstrap-server 10.244.1.33:9092
+  --bootstrap-server kafka-svc:9092
 ```
 # Print-Service Run - VM Options 
 ```
