@@ -47,9 +47,9 @@ spec:
     spec:
       containers:
         - command:
-            - "/otelcol"
+            - "/otelcol-contrib"
             - "--config=/conf/otel-collector-config.yaml"
-          image: otel/opentelemetry-collector:0.52.0
+          image: otel/opentelemetry-collector-contrib:0.53.0-arm64
           name: otel-collector
           resources:
             limits:
@@ -93,14 +93,6 @@ data:
           grpc:
           http:
             endpoint: "0.0.0.0:4318"
-      prometheus:
-        config:
-          scrape_configs:
-            - job_name: "otel-collector"
-              scrape_interval: 5s
-              static_configs:
-                - targets:
-                  - "localhost:8888"
     processors:
       batch:
       memory_limiter:
@@ -110,14 +102,18 @@ data:
         spike_limit_mib: 512
         check_interval: 5s
     exporters:
-      jaeger:
-        endpoint: "jaeger-service:14250"
-        tls:
-          insecure: true
-      prometheus:
-        endpoint: "0.0.0.0:8889"
-      otlp/elastic:
-        endpoint: "elasticsearch:9200"
+      kafka:
+        topic: spans
+        brokers:
+        - kafka-svc:9092
+        auth:
+          tls:
+            insecure: true
+      logging:
+        loglevel: debug
+      elasticsearch:
+        endpoints:
+        - "http://elasticsearch:9200"
         tls:
           insecure: true
     extensions:
@@ -131,22 +127,8 @@ data:
       pipelines:
         logs:
           receivers: [otlp]
-          processors:
-          - batch
-          exporters: [otlp/elastic]
-        traces:
-          receivers: [otlp]
-          processors: [batch, memory_limiter]
-          exporters: [jaeger]
-        metrics:
-          receivers: [otlp, prometheus]
-          processors: [batch, memory_limiter]
-          exporters: [prometheus]
+          processors: []
+          exporters: [logging,kafka]
       telemetry:
         logs:
           level: debug
-          initial_fields:
-            service: my-instance
-        metrics:
-          level: detailed
-          address: 0.0.0.0:8888

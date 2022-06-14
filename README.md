@@ -14,8 +14,25 @@ kubectl apply -f .
 * Otel-Collector Prometheus Exporter: http://localhost:30011/metrics
 * Kibana: http://localhost:30012
 * Elasticsearch: http://localhost:30013
+* Otel Collector - Kafka Exporter : https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/kafkaexporter
 
-
+## Kafka Topics- Partitions
+```
+kubectl run kafka-client --rm -ti --image bitnami/kafka:3.1.0 -- 	bash
+kubectl exec -it kafka-client bash 
+NOTE: 10.244.1.33:9092 (Pod IP)
+kafka-topics.sh --create --topic span --bootstrap-server 10.244.1.33:9092
+kafka-topics.sh --describe \
+  --topic span \
+  --bootstrap-server 10.244.1.33:9092
+kafka-console-producer.sh \
+  --topic span \
+  --bootstrap-server 10.244.1.33:9092
+kafka-console-consumer.sh \
+  --topic span \
+  --from-beginning \
+  --bootstrap-server 10.244.1.33:9092
+```
 # Print-Service Run - VM Options 
 ```
 -javaagent:opentelemetry-javaagent.jar
@@ -37,11 +54,13 @@ curl -X POST --location "http://localhost:9091/api/v1.0/print" \
     -H "Content-Type: text/plain" \
     -d "muhammed"
 ```
-
 # Resources
 
-* https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/
-* https://opentelemetry.io/docs/collector/configuration/
-* https://github.com/open-telemetry/opentelemetry-java/blob/main/sdk-extensions/autoconfigure/README.md#otlp-exporter-span-metric-and-log-exporters
-* https://medium.com/devopsturkiye/kubernetes-elk-kurulumu-80058c812cf6
-* https://www.elastic.co/guide/en/apm/guide/current/open-telemetry.html
+* [Otel Library Config](https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/)
+* [Otel Collector Config](https://opentelemetry.io/docs/collector/configuration/)
+* [Otel Collector Contrib Github](https://github.com/open-telemetry/opentelemetry-collector-contrib)
+* [Otel Collector Contrib Dockerhub](https://hub.docker.com/r/otel/opentelemetry-collector-contrib/tags)
+* [Otel Collector - Operator Helm Charts](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator)
+* [Elastic-Kibana Installation](https://medium.com/devopsturkiye/kubernetes-elk-kurulumu-80058c812cf6)
+* [Otel Collector Kafka Exporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/0faff4502e26af10b570a8bd80d8d98a7d0283f5/exporter/kafkaexporter)
+* [Otel Collector Elastic Exporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/0faff4502e26af10b570a8bd80d8d98a7d0283f5/exporter/elasticsearchexporter)
