@@ -3,7 +3,7 @@
 
 ### Components
 * Application: Spring Boot (Print-service): Creates telemetry(logs, spans, metrics) data.
-* OTel Library: JVM Java Agent (Opentelemetry-Javaagent.jar): Filter all http requests and sends all telemetry data and by creating OTLP exporter
+* OTel Library: JVM Java Agent (Opentelemetry-Javaagent.jar): Filter all http requests and sends all telemetry data by creating OTLP exporter
 * OTel Collector: Kubernetes Daemonset: Collects all telemetry data and process(batch) them. By configuration,
   * Pull-based: creates a Prometheus exporter and by giving exporter url in prometheus config, Prometheus scrapes the metrics.
   * Push-based: send traces to the Jaeger
