@@ -16,14 +16,27 @@
 
 ## Installation (by Order)
 
-* [Jaeger](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/j.aeger/jaeger.yaml): http://localhost:30008
-* [Prometheus](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/prometheus/prometheus.yaml): http://localhost:30009
-* [Elasticsearch](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/elastic-kibana/elastic.yaml): http://localhost:30013
-* [Kibana](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/elastic-kibana/kibana.yaml): http://localhost:30012
-* [Kafka](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/kafka/README.md)
-* [Otel-Collector](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/otel/otelcollector.yaml)
+* [Jaeger](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/jaeger/jaeger.yaml): http://localhost:30008
+* [Prometheus](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/prometheus/prometheus.yaml): http://localhost:30009
+* [Elasticsearch](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/elastic-kibana/elastic.yaml): http://localhost:30013
+* [Kibana](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/elastic-kibana/kibana.yaml): http://localhost:30012
+* [Kafka](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/kafka/README.md)
+* [Otel-Collector](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/otel/otelcollector.yaml)
     * HTTP Receiver: http://localhost:30010
     * Prometheus Exporter: http://localhost:30011/metrics
+
+### Run - JVM Options
+```
+-javaagent:opentelemetry-javaagent.jar
+-Dotel.exporter.otlp.protocol=http/protobuf
+-Dotel.traces.exporter=otlp
+-Dotel.exporter.otlp.traces.endpoint=http://localhost:30010/v1/traces
+-Dotel.metrics.exporter=otlp
+-Dotel.exporter.otlp.metrics.endpoint=http://localhost:30010/v1/metrics
+-Dotel.logs.exporter=otlp
+-Dotel.exporter.otlp.logs.endpoint=http://localhost:30010/v1/logs
+-Dotel.service.name=print-service
+```
 
 # Test Data
 ```
