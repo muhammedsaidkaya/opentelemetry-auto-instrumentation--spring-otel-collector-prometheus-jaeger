@@ -1,5 +1,9 @@
-FROM --platform=linux/amd64 openjdk:17-alpine
-RUN mkdir -p /app/bin
-COPY ./target/print-service.jar /app/bin
-COPY opentelemetry-javaagent.jar /app/bin
-CMD java -javaagent:/app/bin/opentelemetry-javaagent.jar -jar /app/bin/print-service.jar
+FROM openjdk:18.0.1.1-oraclelinux7 as base
+LABEL maintainer=muhammedsaidkaya
+
+COPY opentelemetry-javaagent.jar lib/opentelemetry.jar
+COPY target/print-service.jar lib/print-service.jar
+
+EXPOSE 9091
+
+ENTRYPOINT ["java","-javaagent:lib/opentelemetry.jar", "-jar","lib/print-service.jar"]

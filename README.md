@@ -2,8 +2,8 @@
 # Opentelemetry Otel Collector Example
 
 ### Components
-* Application: Spring Boot (Print-service): Creates telemetry(logs, spans, metrics) data.
-* OTel Library: JVM Java Agent (Opentelemetry-Javaagent.jar): Filter all http requests and sends all telemetry data by creating OTLP exporter
+* Application: Spring Boot 2.6.5 - Java 18 (Print-service): Creates telemetry data. (logs, spans, metrics)
+* OTel Agent: JVM Java Agent (Opentelemetry-Javaagent.jar): Filter all http requests and sends all telemetry data by creating OTLP exporter
 * OTel Collector: Kubernetes Daemonset: Collects all telemetry data and process(batch) them. By configuration,
   * Pull-based: creates a Prometheus exporter and by giving exporter url in prometheus config, Prometheus scrapes the metrics.
   * Push-based: send traces to the Jaeger
@@ -24,21 +24,6 @@
 * [Otel-Collector](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/otel/otelcollector.yaml)
     * HTTP Receiver: http://localhost:30010
     * Prometheus Exporter: http://localhost:30011/metrics
-
-# Telemetry Data of Application(Print-Service) 
-
-### Run - JVM Options 
-```
--javaagent:opentelemetry-javaagent.jar
--Dotel.exporter.otlp.protocol=http/protobuf
--Dotel.traces.exporter=otlp
--Dotel.exporter.otlp.traces.endpoint=http://localhost:30010/v1/traces
--Dotel.metrics.exporter=otlp
--Dotel.exporter.otlp.metrics.endpoint=http://localhost:30010/v1/metrics
--Dotel.logs.exporter=otlp
--Dotel.exporter.otlp.logs.endpoint=http://localhost:30010/v1/logs
--Dotel.service.name=print-service
-```
 
 # Test Data
 ```
