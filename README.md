@@ -11,20 +11,20 @@
 
 ## Installation (by Order)
 
-* [Otel-Collector](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/otel/otelcollector.yaml)
-* [App](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/app.yaml)
+* [Otel-Collector](https://github.com/muhammedsaidkaya/otel-auto-instrumentation-demo/blob/master/deployments/otel/otelcollector.yaml)
+* [App](https://github.com/muhammedsaidkaya/otel-auto-instrumentation-demo/blob/master/deployments/app.yaml)
 
 ## Advanced - Otel Collector
 
-* [Configuration](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/otel/all-config.yaml)
+* [Configuration](https://github.com/muhammedsaidkaya/otel-auto-instrumentation-demo/blob/master/deployments/otel/all-config.yaml)
 
 ### [Exporters](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter)
 
-* [Jaeger](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/jaeger/jaeger.yaml)
-* [Prometheus](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/prometheus/prometheus.yaml): http://localhost:30009
-* [Elasticsearch](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/elastic-kibana/elastic.yaml): http://localhost:30013
-  * [Kibana](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/elastic-kibana/kibana.yaml): http://localhost:30012
-* [Kafka](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/kafka/README.md)
+* [Jaeger](https://github.com/muhammedsaidkaya/otel-auto-instrumentation-demo/blob/master/deployments/jaeger/jaeger.yaml)
+* [Prometheus](https://github.com/muhammedsaidkaya/otel-auto-instrumentation-demo/blob/master/deployments/prometheus/prometheus.yaml): http://localhost:30009
+* [Elasticsearch](https://github.com/muhammedsaidkaya/otel-auto-instrumentation-demo/blob/master/deployments/elastic-kibana/elastic.yaml): http://localhost:30013
+  * [Kibana](https://github.com/muhammedsaidkaya/otel-auto-instrumentation-demo/blob/master/deployments/elastic-kibana/kibana.yaml): http://localhost:30012
+* [Kafka](https://github.com/muhammedsaidkaya/otel-auto-instrumentation-demo/blob/master/deployments/kafka/README.md)
 
 
 # Test Data
