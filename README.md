@@ -12,8 +12,6 @@
 ## Installation (by Order)
 
 * [Otel-Collector](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/otel/otelcollector.yaml)
-  * HTTP Receiver: http://localhost:30010
-  * Prometheus Exporter: http://localhost:30011/metrics
 * [App](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/app.yaml)
 
 ## Advanced - Otel Collector
