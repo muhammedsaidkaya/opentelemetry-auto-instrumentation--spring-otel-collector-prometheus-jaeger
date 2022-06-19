@@ -38,6 +38,6 @@ jobs:
         context: .
         # Note: tags has to be all lower-case
         tags: |
-          uzumlukek/opentelemetry-print-service:test
+          uzumlukek/opentelemetry-print-service:latest
         # build on feature branches, push only on master branch
         push: true
