@@ -4,7 +4,7 @@
 ### Components
 * Application: (Print-service) Creates telemetry data. (logs, spans, metrics)
   * Spring Boot 2.6.5
-  * Java 18
+  * Java 11
 * [OTel Agent](https://github.com/open-telemetry/opentelemetry-java/blob/main/sdk-extensions/autoconfigure/README.md): JVM Java Agent (Opentelemetry-Javaagent.jar): Filter all http requests and sends all telemetry data by creating OTLP exporter
 * [OTel Collector](https://opentelemetry.io/docs/collector/configuration/): Kubernetes Daemonset: Collects all telemetry data and process(batch) them. By configuration,
   * Logging Exporter
