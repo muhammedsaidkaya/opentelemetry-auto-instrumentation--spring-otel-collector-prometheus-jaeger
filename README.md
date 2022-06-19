@@ -2,41 +2,32 @@
 # Opentelemetry Otel Collector Example
 
 ### Components
-* Application: Spring Boot 2.6.5 - Java 18 (Print-service): Creates telemetry data. (logs, spans, metrics)
-* OTel Agent: JVM Java Agent (Opentelemetry-Javaagent.jar): Filter all http requests and sends all telemetry data by creating OTLP exporter
-* OTel Collector: Kubernetes Daemonset: Collects all telemetry data and process(batch) them. By configuration,
-  * Pull-based: creates a Prometheus exporter and by giving exporter url in prometheus config, Prometheus scrapes the metrics.
-  * Push-based: send traces to the Jaeger
-  * Push-based: send logs to Elasticsearch
-  * Push-based: send metrics(otlp_metrics topic), traces(otlp_traces topic) and logs(otlp_logs topic) to Kafka
-* Prometheus
-* Jaeger
-* Elasticsearch & Kibana
-* Kafka & Kafdrop
+* Application: (Print-service) Creates telemetry data. (logs, spans, metrics)
+  * Spring Boot 2.6.5
+  * Java 18
+* [OTel Agent](https://github.com/open-telemetry/opentelemetry-java/blob/main/sdk-extensions/autoconfigure/README.md): JVM Java Agent (Opentelemetry-Javaagent.jar): Filter all http requests and sends all telemetry data by creating OTLP exporter
+* [OTel Collector](https://opentelemetry.io/docs/collector/configuration/): Kubernetes Daemonset: Collects all telemetry data and process(batch) them. By configuration,
+  * Logging Exporter
 
 ## Installation (by Order)
 
-* [Jaeger](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/jaeger/jaeger.yaml): http://localhost:30008
+* [Otel-Collector](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/otel/otelcollector.yaml)
+  * HTTP Receiver: http://localhost:30010
+  * Prometheus Exporter: http://localhost:30011/metrics
+* [App](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/app.yaml)
+
+## Advanced - Otel Collector
+
+* [Configuration](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/otel/all-config.yaml)
+
+### [Exporters](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter)
+
+* [Jaeger](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/jaeger/jaeger.yaml)
 * [Prometheus](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/prometheus/prometheus.yaml): http://localhost:30009
 * [Elasticsearch](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/elastic-kibana/elastic.yaml): http://localhost:30013
-* [Kibana](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/elastic-kibana/kibana.yaml): http://localhost:30012
+  * [Kibana](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/elastic-kibana/kibana.yaml): http://localhost:30012
 * [Kafka](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/kafka/README.md)
-* [Otel-Collector](https://github.com/muhammedsaidkaya/opentelemetry-auto-instrumentation-otel-collector--example/blob/master/deployments/otel/otelcollector.yaml)
-    * HTTP Receiver: http://localhost:30010
-    * Prometheus Exporter: http://localhost:30011/metrics
 
-### Run - JVM Options
-```
--javaagent:opentelemetry-javaagent.jar
--Dotel.exporter.otlp.protocol=http/protobuf
--Dotel.traces.exporter=otlp
--Dotel.exporter.otlp.traces.endpoint=http://localhost:30010/v1/traces
--Dotel.metrics.exporter=otlp
--Dotel.exporter.otlp.metrics.endpoint=http://localhost:30010/v1/metrics
--Dotel.logs.exporter=otlp
--Dotel.exporter.otlp.logs.endpoint=http://localhost:30010/v1/logs
--Dotel.service.name=print-service
-```
 
 # Test Data
 ```

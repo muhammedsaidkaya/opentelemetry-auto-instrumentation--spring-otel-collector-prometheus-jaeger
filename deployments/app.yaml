@@ -1,0 +1,38 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: print-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: print-app
+  ports:
+    - protocol: TCP
+      port: 9091
+      targetPort: 9091
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: print-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: print-app
+  template:
+    metadata:
+      labels:
+        app: print-app
+    spec:
+      containers:
+        - name: print-container
+          image: uzumlukek/opentelemetry-print-service
+          ports:
+            - containerPort: 9091
+          env:
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: http/protobuf
+            - name: OTEl_EXPORTER_OTLP_ENDPOINT
+              value: http://otel-collector:4318

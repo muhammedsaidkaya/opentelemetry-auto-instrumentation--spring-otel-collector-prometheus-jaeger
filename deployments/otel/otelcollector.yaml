@@ -93,14 +93,6 @@ data:
           grpc:
           http:
             endpoint: "0.0.0.0:4318"
-      prometheus:
-        config:
-          scrape_configs:
-            - job_name: "otel-collector"
-              scrape_interval: 5s
-              static_configs:
-                - targets:
-                  - "localhost:8888"
     processors:
       batch:
       memory_limiter:
@@ -110,32 +102,6 @@ data:
         spike_limit_mib: 512
         check_interval: 5s
     exporters:
-      jaeger:
-        endpoint: "jaeger-service:14250"
-        tls:
-          insecure: true
-      prometheus:
-        endpoint: "0.0.0.0:8889"
-      kafka/logs:
-        topic: logs
-        protocol_version: 3.1.0
-        brokers:
-        - "kafka-kafka-brokers:9092"
-      kafka/metrics:
-        topic: metrics
-        protocol_version: 3.1.0
-        brokers:
-        - "kafka-kafka-brokers:9092"
-      kafka/traces:
-        topic: traces
-        protocol_version: 3.1.0
-        brokers:
-        - "kafka-kafka-brokers:9092"
-      elasticsearch:
-        endpoints:
-        - "http://elasticsearch:9200"
-        tls:
-          insecure: true
       logging:
         loglevel: debug
     extensions:
@@ -150,15 +116,15 @@ data:
         logs:
           receivers: [otlp]
           processors: [batch, memory_limiter]
-          exporters: [logging, kafka/logs, elasticsearch]
+          exporters: [logging]
         metrics:
-          receivers: [otlp, prometheus]
+          receivers: [otlp]
           processors: [batch, memory_limiter]
-          exporters: [logging, kafka/metrics, prometheus]
+          exporters: [logging]
         traces:
           receivers: [otlp]
           processors: [batch, memory_limiter]
-          exporters: [logging, kafka/traces, jaeger]
+          exporters: [logging]
       telemetry:
         logs:
           level: debug
